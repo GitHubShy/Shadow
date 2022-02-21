@@ -289,7 +289,6 @@ public class ShadowContext extends SubDirContextThemeWrapper {
         return pluginInfo.packageManager.getArchiveFilePath();
     }
 
-
     private BroadcastReceiverWapper wrapBroadcastReceiver(BroadcastReceiver receiver) {
         if (receiver == null) {
             return null;
