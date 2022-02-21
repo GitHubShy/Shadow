@@ -58,7 +58,7 @@ def gitShortRev() {
 }
 
 def setScm(scm) {
-    scm.appendNode('connection', "https://github.com/${System.getenv("GITHUB_ACTOR")}/Shadow.git")
+    scm.appendNode('connection', 'scm:git:https://github.com/GitHubShy/Shadow.git')
 
     def commit
     if ("${System.env.CI}".equalsIgnoreCase("true")) {
@@ -66,7 +66,7 @@ def setScm(scm) {
     } else {
         commit = gitShortRev()
     }
-    scm.appendNode('url', "https://github.com/${System.getenv("GITHUB_ACTOR")}/Shadow/commit/$commit")
+    scm.appendNode('url', "https://github.com/GitHubShy/Shadow/commit/$commit")
 }
 
 def setGeneratePomFileAndDepends(publicationName) {
@@ -89,7 +89,8 @@ def sourceJar(String name, String path) {
     }
 }
 
-def publicationVersion = project.ARTIFACT_VERSION
+//def publicationVersion = project.ARTIFACT_VERSION
+def publicationVersion = '1.0.2'
 def coreGroupId = 'com.tencent.shadow.core'
 def corePath = 'projects/sdk/core'
 def dynamicGroupId = 'com.tencent.shadow.dynamic'
@@ -462,7 +463,21 @@ publishing {
                 url "https://maven.pkg.github.com/" + "${System.env.GITHUB_REPOSITORY}".toLowerCase()
             }
         } else {
-            mavenLocal()
+            //mavenLocal()
+            maven {
+                name = "Shadow"
+                def releasesRepoUrl = "https://packages.aliyun.com/maven/repository/2185800-release-eqxKJa/"
+                def snapshotsRepoUrl = "https://packages.aliyun.com/maven/repository/2185800-snapshot-8RkkEE/"
+                // You only need this if you want to publish snapshots, otherwise just set the URL
+                // to the release repo directly
+                url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+
+                // The username and password we've fetched earlier
+                credentials {
+                    username '620382428af5d39eb36918d1'
+                    password '5Q-v4S(J]p-d'
+                }
+            }
         }
     }
 }
