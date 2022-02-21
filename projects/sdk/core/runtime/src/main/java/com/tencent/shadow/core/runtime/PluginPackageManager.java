@@ -28,4 +28,6 @@ public interface PluginPackageManager {
     ResolveInfo resolveActivity(Intent intent, int flags);
 
     ResolveInfo resolveService(Intent intent, int flags);
+
+    String getArchiveFilePath();
 }

@@ -30,12 +30,12 @@ import java.util.concurrent.CountDownLatch
 object CreateResourceBloc {
     fun create(archiveFilePath: String, hostAppContext: Context): Resources {
         //先用宿主context初始化一个WebView，以便WebView的逻辑去修改sharedLibraryFiles，将webview.apk添加进去
-        val latch = CountDownLatch(1)
-        Handler(Looper.getMainLooper()).post {
-            WebView(hostAppContext)
-            latch.countDown()
-        }
-        latch.await()
+//        val latch = CountDownLatch(1)
+//        Handler(Looper.getMainLooper()).post {
+//            WebView(hostAppContext)
+//            latch.countDown()
+//        }
+//        latch.await()
 
         val packageManager = hostAppContext.packageManager
         val applicationInfo = ApplicationInfo()
