@@ -34,8 +34,9 @@ import java.util.concurrent.CountDownLatch
 internal class DynamicPluginLoader(hostContext: Context, uuid: String) {
     companion object {
         private const val CORE_LOADER_FACTORY_IMPL_NAME =
-                "com.tencent.shadow.dynamic.loader.impl.CoreLoaderFactoryImpl"
+            "com.tencent.shadow.dynamic.loader.impl.CoreLoaderFactoryImpl"
     }
+
     fun setUuidManager(p0: UuidManager?) {
         if (p0 != null)
             mUuidManager = p0
@@ -44,13 +45,14 @@ internal class DynamicPluginLoader(hostContext: Context, uuid: String) {
 
     private val mPluginLoader: ShadowPluginLoader
 
-    private val mDynamicLoaderClassLoader: ClassLoader = DynamicPluginLoader::class.java.classLoader!!
+    private val mDynamicLoaderClassLoader: ClassLoader =
+        DynamicPluginLoader::class.java.classLoader!!
 
-    private var mContext: Context;
+    private var mContext: Context
 
-    private lateinit var mUuidManager: UuidManager;
+    private lateinit var mUuidManager: UuidManager
 
-    private var mUuid: String;
+    private var mUuid: String
 
     private val mUiHandler = Handler(Looper.getMainLooper())
 
@@ -62,18 +64,21 @@ internal class DynamicPluginLoader(hostContext: Context, uuid: String) {
     init {
         try {
             val coreLoaderFactory = mDynamicLoaderClassLoader.getInterface(
-                    CoreLoaderFactory::class.java,
-                    CORE_LOADER_FACTORY_IMPL_NAME
+                CoreLoaderFactory::class.java,
+                CORE_LOADER_FACTORY_IMPL_NAME
             )
             mPluginLoader = coreLoaderFactory.build(hostContext)
-            DelegateProviderHolder.setDelegateProvider(mPluginLoader.delegateProviderKey, mPluginLoader)
+            DelegateProviderHolder.setDelegateProvider(
+                mPluginLoader.delegateProviderKey,
+                mPluginLoader
+            )
             ContentProviderDelegateProviderHolder.setContentProviderDelegateProvider(mPluginLoader)
             mPluginLoader.onCreate()
         } catch (e: Exception) {
             throw RuntimeException("当前的classLoader找不到PluginLoader的实现", e)
         }
-        mContext = hostContext;
-        mUuid = uuid;
+        mContext = hostContext
+        mUuid = uuid
     }
 
     fun loadPlugin(partKey: String) {
@@ -83,9 +88,9 @@ internal class DynamicPluginLoader(hostContext: Context, uuid: String) {
     }
 
     fun getLoadedPlugin(): MutableMap<String, Boolean> {
-        val plugins  = mPluginLoader.getAllPluginPart()
+        val plugins = mPluginLoader.getAllPluginPart()
         val loadPlugins = hashMapOf<String, Boolean>()
-        for(part in plugins){
+        for (part in plugins) {
             loadPlugins[part.key] = part.value.application.isCallOnCreate
         }
         return loadPlugins
@@ -118,7 +123,7 @@ internal class DynamicPluginLoader(hostContext: Context, uuid: String) {
                 componentName = realAction()
                 waitUiLock.countDown()
             }
-            waitUiLock.await();
+            waitUiLock.await()
         }
 
         return componentName
@@ -141,13 +146,17 @@ internal class DynamicPluginLoader(hostContext: Context, uuid: String) {
                 stopped = realAction()
                 waitUiLock.countDown()
             }
-            waitUiLock.await();
+            waitUiLock.await()
         }
         return stopped
     }
 
     @Synchronized
-    fun bindPluginService(pluginServiceIntent: Intent, binderPsc: BinderPluginServiceConnection, flags: Int): Boolean {
+    fun bindPluginService(
+        pluginServiceIntent: Intent,
+        binderPsc: BinderPluginServiceConnection,
+        flags: Int
+    ): Boolean {
 
         fun realAction(): Boolean {
             if (mConnectionMap[binderPsc.mRemote] == null) {
@@ -155,7 +164,8 @@ internal class DynamicPluginLoader(hostContext: Context, uuid: String) {
             }
 
             val connWrapper = mConnectionMap[binderPsc.mRemote]!!
-            return mPluginLoader.getPluginServiceManager().bindPluginService(pluginServiceIntent, connWrapper, flags)
+            return mPluginLoader.getPluginServiceManager()
+                .bindPluginService(pluginServiceIntent, connWrapper, flags)
         }
         // 确保在ui线程调用
         var stop: Boolean = false
@@ -191,7 +201,8 @@ internal class DynamicPluginLoader(hostContext: Context, uuid: String) {
         }
     }
 
-    private class ServiceConnectionWrapper(private val mConnection: BinderPluginServiceConnection) : ServiceConnection {
+    private class ServiceConnectionWrapper(private val mConnection: BinderPluginServiceConnection) :
+        ServiceConnection {
 
         override fun onServiceDisconnected(name: ComponentName) {
             mConnection.onServiceDisconnected(name)
@@ -221,8 +232,8 @@ internal class DynamicPluginLoader(hostContext: Context, uuid: String) {
     fun <T> ClassLoader.getInterface(clazz: Class<T>, className: String): T {
         try {
             val interfaceImplementClass = loadClass(className)
-            val interfaceImplement = interfaceImplementClass.newInstance()!!
-            return clazz.cast(interfaceImplement)!!
+            val interfaceImplement = interfaceImplementClass.newInstance()
+            return clazz.cast(interfaceImplement) as T
         } catch (e: ClassNotFoundException) {
             throw Exception(e)
         } catch (e: InstantiationException) {

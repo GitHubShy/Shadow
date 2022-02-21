@@ -23,12 +23,14 @@ function testUnderAGPVersion() {
   local TestAGPVersion=$1
   rm -rf stub-project/build
 
-  echo ./gradlew -PSetGradleVersion=false -PTestAGPVersion=$TestAGPVersion -PShadowVersion=$ShadowVersion :stub-project:assemblePluginDebug
-  ./gradlew -PSetGradleVersion=false -PTestAGPVersion=$TestAGPVersion -PShadowVersion=$ShadowVersion :stub-project:assemblePluginDebug
+  echo ./gradlew -PSetGradleVersion=false -PTestAGPVersion=$TestAGPVersion -PShadowVersion=$ShadowVersion :stub-project:assemblePluginA1B2Debug
+  ./gradlew -PSetGradleVersion=false -PTestAGPVersion=$TestAGPVersion -PShadowVersion=$ShadowVersion :stub-project:assemblePluginA1B2Debug
 }
 
 # 测试版本来源
 # https://developer.android.com/studio/releases/gradle-plugin
+setGradleVersion 7.2
+testUnderAGPVersion 7.1.1
 setGradleVersion 7.0.2
 testUnderAGPVersion 7.0.0
 testUnderAGPVersion 4.2.0
