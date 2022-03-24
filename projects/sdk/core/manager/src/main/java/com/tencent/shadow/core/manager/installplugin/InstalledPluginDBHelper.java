@@ -92,9 +92,13 @@ public class InstalledPluginDBHelper extends SQLiteOpenHelper {
      */
     public final static String COLUMN_HOST_WHITELIST = "hostWhiteList";
     /**
+     * 插件的依赖
+     */
+    public final static String COLUMN_PLUGIN_ZONES = "zones";
+    /**
      * 数据库的版本号
      */
-    private final static int VERSION = 4;
+    private final static int VERSION = 5;
 
 
     public InstalledPluginDBHelper(Context context, String name) {
@@ -116,7 +120,8 @@ public class InstalledPluginDBHelper extends SQLiteOpenHelper {
                 + COLUMN_INSTALL_TIME + " INTEGER ,"
                 + COLUMN_PLUGIN_ODEX + " VARCHAR ,"
                 + COLUMN_PLUGIN_LIB + " VARCHAR ,"
-                + COLUMN_HOST_WHITELIST + " VARCHAR "
+                + COLUMN_HOST_WHITELIST + " VARCHAR ,"
+                + COLUMN_PLUGIN_ZONES + " VARCHAR "
                 + ");";
         db.execSQL(sql);
     }
@@ -168,6 +173,18 @@ public class InstalledPluginDBHelper extends SQLiteOpenHelper {
             try {
                 //添加列COLUMN_BUSINESS_NAME。所有旧行保持空值即可，表示同宿主相同业务。
                 db.execSQL("ALTER TABLE " + TABLE_NAME_MANAGER + " ADD " + COLUMN_BUSINESS_NAME + " VARCHAR");
+
+                db.setTransactionSuccessful();
+            } finally {
+                db.endTransaction();
+            }
+        }
+
+        if (oldVersion < 5) {
+            db.beginTransaction();
+            try {
+                //添加列COLUMN_BUSINESS_NAME。所有旧行保持空值即可，表示同宿主相同业务。
+                db.execSQL("ALTER TABLE " + TABLE_NAME_MANAGER + " ADD " + COLUMN_PLUGIN_ZONES + " VARCHAR");
 
                 db.setTransactionSuccessful();
             } finally {

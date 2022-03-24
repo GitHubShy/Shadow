@@ -92,12 +92,14 @@ public class InstalledPlugin implements Serializable {
         final public String businessName;
         final public String[] dependsOn;
         final public String[] hostWhiteList;
+        final public String[] zones;
 
-        PluginPart(int pluginType, String businessName, File file, File oDexDir, File libraryDir, String[] dependsOn, String[] hostWhiteList) {
+        PluginPart(int pluginType, String businessName, File file, File oDexDir, File libraryDir, String[] dependsOn, String[] hostWhiteList,String[] zones) {
             super(pluginType, file, oDexDir, libraryDir);
             this.businessName = businessName;
             this.dependsOn = dependsOn;
             this.hostWhiteList = hostWhiteList;
+            this.zones = zones;
         }
     }
 }

@@ -123,7 +123,8 @@ public class InstalledDao {
                     if (type == InstalledType.TYPE_PLUGIN) {
                         String[] dependsOn = getArrayStringByColumnName(InstalledPluginDBHelper.COLUMN_DEPENDSON, cursor);
                         String[] hostWhiteList = getArrayStringByColumnName(InstalledPluginDBHelper.COLUMN_HOST_WHITELIST, cursor);
-                        installedPlugin.plugins.put(partKey, new InstalledPlugin.PluginPart(type, businessName, pluginFile, oDexDir, libDir, dependsOn, hostWhiteList));
+                        String[] zones = getArrayStringByColumnName(InstalledPluginDBHelper.COLUMN_PLUGIN_ZONES, cursor);
+                        installedPlugin.plugins.put(partKey, new InstalledPlugin.PluginPart(type, businessName, pluginFile, oDexDir, libDir, dependsOn, hostWhiteList,zones));
                     } else {
                         throw new RuntimeException("出现不认识的type==" + type);
                     }
@@ -208,7 +209,7 @@ public class InstalledDao {
                                 fileInfo.file.getAbsolutePath(),
                                 InstalledType.TYPE_PLUGIN,
                                 fileInfo.hostWhiteList,
-                                soDir, oDexDir
+                                soDir, oDexDir,fileInfo.zones
                         )
                 );
             }

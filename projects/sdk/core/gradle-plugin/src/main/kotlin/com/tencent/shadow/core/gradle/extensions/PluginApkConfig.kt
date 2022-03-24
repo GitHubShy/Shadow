@@ -34,6 +34,11 @@ open class PluginApkConfig {
     var dependsOn: Array<String> = emptyArray()
     var hostWhiteList: Array<String> = emptyArray()
 
+    /**
+     * 该apk插件对应的设备区域zone names
+     */
+    var zones : Array<String> = emptyArray()
+
     constructor(name: String) {
         this.name = name
     }

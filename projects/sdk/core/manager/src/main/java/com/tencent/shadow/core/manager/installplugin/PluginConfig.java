@@ -93,16 +93,21 @@ public class PluginConfig {
         final String[] dependsOn;
         final String[] hostWhiteList;
         final String businessName;
+        /**
+         * 该apk对应的可以安装此apk所对应的设备区域属性名称
+         */
+        final String[] zones;
 
-        PluginFileInfo(String businessName, FileInfo fileInfo, String[] dependsOn, String[] hostWhiteList) {
-            this(businessName, fileInfo.file, fileInfo.hash, dependsOn, hostWhiteList);
+        PluginFileInfo(String businessName, FileInfo fileInfo, String[] dependsOn, String[] hostWhiteList,String[] zones) {
+            this(businessName, fileInfo.file, fileInfo.hash, dependsOn, hostWhiteList, zones);
         }
 
-        PluginFileInfo(String businessName, File file, String hash, String[] dependsOn, String[] hostWhiteList) {
+        PluginFileInfo(String businessName, File file, String hash, String[] dependsOn, String[] hostWhiteList,String[] zones) {
             super(file, hash);
             this.businessName = businessName;
             this.dependsOn = dependsOn;
             this.hostWhiteList = hostWhiteList;
+            this.zones = zones;
         }
     }
 
@@ -154,7 +159,8 @@ public class PluginConfig {
         FileInfo fileInfo = getFileInfo(jsonObject, storageDir);
         String[] dependsOn = getArrayStringByName(jsonObject, "dependsOn");
         String[] hostWhiteList = getArrayStringByName(jsonObject, "hostWhiteList");
-        return new PluginFileInfo(businessName, fileInfo, dependsOn, hostWhiteList);
+        String[] zones = getArrayStringByName(jsonObject, "zones");
+        return new PluginFileInfo(businessName, fileInfo, dependsOn, hostWhiteList,zones);
     }
 
     private static String[] getArrayStringByName(JSONObject jsonObject, String name) throws JSONException {

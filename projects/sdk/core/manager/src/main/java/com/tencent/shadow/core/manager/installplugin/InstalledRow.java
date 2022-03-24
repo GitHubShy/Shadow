@@ -38,6 +38,8 @@ public class InstalledRow {
 
     public String[] hostWhiteList;
 
+    public String[] zones;
+
     public String filePath;
 
     public int type;
@@ -62,11 +64,12 @@ public class InstalledRow {
         this.oDexDir = oDexDir;
     }
 
-    public InstalledRow(String hash, String businessName, String partKey, String[] dependsOn, String filePath, int type, String[] hostWhiteList, String soDir, String oDexDir) {
+    public InstalledRow(String hash, String businessName, String partKey, String[] dependsOn, String filePath, int type, String[] hostWhiteList, String soDir, String oDexDir,String[] zones) {
         this(hash, partKey, filePath, type, soDir, oDexDir);
         this.businessName = businessName;
         this.dependsOn = dependsOn;
         this.hostWhiteList = hostWhiteList;
+        this.zones = zones;
     }
 
     public ContentValues toContentValues() {
@@ -86,6 +89,10 @@ public class InstalledRow {
         if (hostWhiteList != null) {
             JSONArray jsonArray = new JSONArray(Arrays.asList(hostWhiteList));
             contentValues.put(InstalledPluginDBHelper.COLUMN_HOST_WHITELIST, jsonArray.toString());
+        }
+        if (zones != null) {
+            JSONArray jsonArray = new JSONArray(Arrays.asList(zones));
+            contentValues.put(InstalledPluginDBHelper.COLUMN_PLUGIN_ZONES, jsonArray.toString());
         }
         contentValues.put(InstalledPluginDBHelper.COLUMN_TYPE, type);
         contentValues.put(InstalledPluginDBHelper.COLUMN_UUID, UUID);

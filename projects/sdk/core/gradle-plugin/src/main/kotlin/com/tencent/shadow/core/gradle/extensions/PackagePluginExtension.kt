@@ -41,6 +41,8 @@ open class PackagePluginExtension {
     var uuidNickName = ""
     var compactVersion: Array<Int> = emptyArray()
 
+//    var zoneApk = mutableMapOf<String, String>()
+
     var buildTypes: NamedDomainObjectContainer<PluginBuildType>
 
     constructor(project: Project) {
@@ -105,6 +107,13 @@ open class PackagePluginExtension {
                 }
                 pluginObj["hostWhiteList"] = hostWhiteListJson
             }
+            if (i.zones.isNotEmpty()) {
+                val zoneNames = JSONArray()
+                for (k in i.zones) {
+                    zoneNames.add(k)
+                }
+                pluginObj["zones"] = zoneNames
+            }
             jsonArr.add(pluginObj)
         }
         json["plugins"] = jsonArr
@@ -149,6 +158,14 @@ open class PackagePluginExtension {
             }
             json["compact_version"] = jsonArray
         }
+
+//        if (zoneApk.isNotEmpty()) {
+//            var jsonMap = JSONArray()
+//            for (i in zoneApk) {
+//                jsonMap.add(i)
+//            }
+//            json["zone_apk"] = jsonMap
+//        }
         return json
     }
 }
